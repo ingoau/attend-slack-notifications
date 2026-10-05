@@ -1,0 +1,27 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "attend-slack-notifications",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "observability": { "enabled": true },
+
+  // How often to check Attend for new sign-ups. Every minute by default.
+  "triggers": { "crons": ["* * * * *"] },
+
+  // Holds the rotating Attend token and the list of people already announced.
+  // SQLite-backed, so it works on the Workers free plan and needs no setup.
+  "durable_objects": {
+    "bindings": [{ "name": "POLLER", "class_name": "Poller" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Poller"] }],
+
+  // Non-secret settings. Secrets (ATTEND_TOKEN, SLACK_WEBHOOK_URL, and the
+  // optional ADMIN_KEY / ALERT_WEBHOOK_URL) are set with `wrangler secret put`.
+  // See README.md for every option.
+  "vars": {
+    // Event ID or slug, as in https://attend.hackclub.com/<slug>. Comma-separate for several.
+    "ATTEND_EVENT": "",
+    "MESSAGE_TEMPLATE": ":tada: *{name}* just signed up for *{event}*! That's *{count}* sign-ups so far.",
+    "SUMMARY_TEMPLATE": ":tada: *{new_count}* more people signed up for *{event}*! That's *{count}* sign-ups so far."
+  }
+}
