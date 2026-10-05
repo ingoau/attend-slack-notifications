@@ -33,12 +33,6 @@
       },
       "ATTEND_EVENT": {
         "description": "Event slug or ID, as in attend.hackclub.com/admin/<slug>. Comma-separate several."
-      },
-      "MESSAGE_TEMPLATE": {
-        "description": "Message per sign-up. Placeholders: {name} {first_name} {last_name} {mention} {email} {status} {count} {event} {event_url}."
-      },
-      "SUMMARY_TEMPLATE": {
-        "description": "Message used when more people signed up at once than MAX_MESSAGES_PER_POLL. Placeholders: {new_count} {count} {event} {event_url}."
       }
     }
   }

@@ -29,47 +29,59 @@ want. It looks like `https://hooks.slack.com/services/T…/B…/…`.
 
 ### 2. Deploy
 
-**One click:** use the **Deploy to Cloudflare** button above. It forks this repo into your GitHub
-account, asks for the secrets and settings, and deploys. Set `ATTEND_EVENT` to your event's slug.
+Nothing in the repo needs editing: every setting, credentials included, is stored on Cloudflare
+(secrets are encrypted there and never touch git). Pick one of these:
 
-**Or with Wrangler:**
+**With Wrangler, from a plain clone** (no fork, no GitHub account needed):
 
 ```sh
 git clone https://github.com/ingoau/attend-slack-notifications
 cd attend-slack-notifications
 npm install
+npx wrangler login
 
-# Set your event in wrangler.jsonc → vars.ATTEND_EVENT (the slug from attend.hackclub.com/admin/<slug>)
-
-npx wrangler secret put ATTEND_TOKEN
+npx wrangler deploy                        # creates the worker
+npx wrangler secret put ATTEND_TOKEN       # each one prompts for the value
 npx wrangler secret put SLACK_WEBHOOK_URL
-npx wrangler secret put ADMIN_KEY        # optional, enables /status, /poll, /test, /reset
-
-npm run deploy
+npx wrangler secret put ATTEND_EVENT       # the slug from attend.hackclub.com/admin/<slug>
+npx wrangler secret put ADMIN_KEY          # optional, enables /status, /poll, /test, /reset
 ```
+
+Settings take effect immediately, with no redeploy. To update later: `git pull && npx wrangler deploy`.
+Your settings are kept.
+
+**From the Cloudflare dashboard, building straight from GitHub:** Workers & Pages → Create →
+Import a repository → pick this repo. Then add the settings under the
+worker's **Settings → Variables and Secrets**. Cloudflare redeploys on every push, and settings
+added in the dashboard survive redeploys (`keep_vars` in `wrangler.jsonc`).
+
+**One click:** the **Deploy to Cloudflare** button above copies this repo into your GitHub account,
+asks for each setting, and deploys.
 
 On its first run the worker quietly records everyone already signed up, so you won't get a flood of
 messages for existing sign-ups. Every person who appears after that gets announced.
 
 ## Configuration
 
-Settings live in `vars` in [`wrangler.jsonc`](wrangler.jsonc) (or in the Cloudflare dashboard under
-**Settings → Variables and Secrets**). Secrets are set with `npx wrangler secret put <NAME>`.
+Set each of these with `npx wrangler secret put <NAME>`, or in the Cloudflare dashboard under the
+worker's **Settings → Variables and Secrets** (as a secret or a plain-text variable; the worker reads
+both the same way). Use a secret for anything sensitive. Changes apply on the next poll, with no
+redeploy needed.
 
-| Name | Kind | Default | What it does |
-| --- | --- | --- | --- |
-| `ATTEND_TOKEN` | secret | **required** | Attend mobile token. Only used to start (see [Token rotation](#token-rotation)). |
-| `SLACK_WEBHOOK_URL` | secret | **required** | Where sign-ups are posted. |
-| `ATTEND_EVENT` | var | **required** | Event slug or ID. Comma-separate to watch several events. |
-| `MESSAGE_TEMPLATE` | var | `:tada: *{name}* just signed up for *{event}*! That's *{count}* sign-ups so far.` | One message per new sign-up. |
-| `SUMMARY_TEMPLATE` | var | `:tada: *{new_count}* more people signed up for *{event}*! That's *{count}* sign-ups so far.` | Used when more people signed up at once than `MAX_MESSAGES_PER_POLL`. |
-| `SLACK_PAYLOAD_TEMPLATE` | var | – | A whole Slack message as JSON (e.g. Block Kit). See below. |
-| `MAX_MESSAGES_PER_POLL` | var | `5` | Most messages sent per event per poll. Past this, the last message summarizes the rest. |
-| `SIGNUP_STATUSES` | var | everyone on the roster | Comma-separated statuses that count as signed up, e.g. `complete` to only announce people who finished registering. Statuses: `invited`, `in_progress`, `awaiting_guardian`, `complete`. |
-| `ANNOUNCE_EXISTING` | var | `false` | Announce everyone already signed up on the first run instead of recording them silently. |
-| `ATTEND_BASE_URL` | var | `https://attend.hackclub.com` | For self-hosted Attend instances. |
-| `ADMIN_KEY` | secret | – | Enables the admin endpoints. |
-| `ALERT_WEBHOOK_URL` | secret | `SLACK_WEBHOOK_URL` | Where problems (expired token, inaccessible event) are reported. |
+| Name | Default | What it does |
+| --- | --- | --- |
+| `ATTEND_TOKEN` | **required** | Attend mobile token. Only used to start (see [Token rotation](#token-rotation)). |
+| `SLACK_WEBHOOK_URL` | **required** | Where sign-ups are posted. |
+| `ATTEND_EVENT` | **required** | Event slug or ID. Comma-separate to watch several events. |
+| `MESSAGE_TEMPLATE` | `:tada: *{name}* just signed up for *{event}*! That's *{count}* sign-ups so far.` | One message per new sign-up. |
+| `SUMMARY_TEMPLATE` | `:tada: *{new_count}* more people signed up for *{event}*! That's *{count}* sign-ups so far.` | Used when more people signed up at once than `MAX_MESSAGES_PER_POLL`. |
+| `SLACK_PAYLOAD_TEMPLATE` | – | A whole Slack message as JSON (e.g. Block Kit). See below. |
+| `MAX_MESSAGES_PER_POLL` | `5` | Most messages sent per event per poll. Past this, the last message summarizes the rest. |
+| `SIGNUP_STATUSES` | everyone on the roster | Comma-separated statuses that count as signed up, e.g. `complete` to only announce people who finished registering. Statuses: `invited`, `in_progress`, `awaiting_guardian`, `complete`. |
+| `ANNOUNCE_EXISTING` | `false` | Announce everyone already signed up on the first run instead of recording them silently. |
+| `ATTEND_BASE_URL` | `https://attend.hackclub.com` | For self-hosted Attend instances. |
+| `ADMIN_KEY` | – | Enables the admin endpoints. |
+| `ALERT_WEBHOOK_URL` | `SLACK_WEBHOOK_URL` | Where problems (expired token, inaccessible event) are reported. |
 
 The poll interval is the cron in `wrangler.jsonc` → `triggers.crons` (every minute by default).
 
@@ -105,8 +117,21 @@ Values from Attend are escaped, so a participant can't sneak `<!channel>` or lin
 Set `SLACK_PAYLOAD_TEMPLATE` to a JSON Slack message. Every string in it is a template, and `{text}` is
 the rendered `MESSAGE_TEMPLATE` / `SUMMARY_TEMPLATE` (handy for the notification fallback text):
 
-```jsonc
-"SLACK_PAYLOAD_TEMPLATE": "{\"text\":\"{text}\",\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"{text}\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Open in Attend\"},\"url\":\"{event_url}\"}}]}"
+```json
+{
+  "text": "{text}",
+  "blocks": [
+    {
+      "type": "section",
+      "text": { "type": "mrkdwn", "text": "{text}" },
+      "accessory": {
+        "type": "button",
+        "text": { "type": "plain_text", "text": "Open in Attend" },
+        "url": "{event_url}"
+      }
+    }
+  ]
+}
 ```
 
 The same payload template is used for single and summary messages; placeholders that don't apply
@@ -124,7 +149,8 @@ This means the `ATTEND_TOKEN` secret goes stale after the first rotation. That's
 the starting point. The worker remembers which secret its current token came from, and **if you
 change the `ATTEND_TOKEN` secret it switches to the new one**. So if the token is ever lost (the
 worker was paused for over two weeks, the session was revoked in Attend, …) the worker posts an alert
-to Slack once, and you fix it by issuing a new token and running `npx wrangler secret put ATTEND_TOKEN`.
+to Slack once, and you fix it by issuing a new token and running `npx wrangler secret put ATTEND_TOKEN` (or updating it in the
+dashboard).
 
 ## Admin endpoints
 

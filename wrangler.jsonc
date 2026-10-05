@@ -15,13 +15,8 @@
   },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Poller"] }],
 
-  // Non-secret settings. Secrets (ATTEND_TOKEN, SLACK_WEBHOOK_URL, and the
-  // optional ADMIN_KEY / ALERT_WEBHOOK_URL) are set with `wrangler secret put`.
-  // See README.md for every option.
-  "vars": {
-    // Event ID or slug, as in https://attend.hackclub.com/<slug>. Comma-separate for several.
-    "ATTEND_EVENT": "",
-    "MESSAGE_TEMPLATE": ":tada: *{name}* just signed up for *{event}*! That's *{count}* sign-ups so far.",
-    "SUMMARY_TEMPLATE": ":tada: *{new_count}* more people signed up for *{event}*! That's *{count}* sign-ups so far."
-  }
+  // All settings (ATTEND_EVENT, MESSAGE_TEMPLATE, ...) are set on Cloudflare, not here:
+  // `npx wrangler secret put <NAME>` or the dashboard's Variables and Secrets. keep_vars stops
+  // a redeploy from wiping the ones set in the dashboard. See README.md for every option.
+  "keep_vars": true
 }
