@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "description": "Cloudflare Worker that posts to Slack whenever someone new signs up for a Hack Club Attend event.",
-  "license": "MIT",
   "type": "module",
   "scripts": {
     "deploy": "wrangler deploy",
@@ -17,5 +16,30 @@
     "typescript": "^5.9.0",
     "vitest": "^3.2.0",
     "wrangler": "^4.0.0"
+  },
+  "cloudflare": {
+    "bindings": {
+      "ATTEND_TOKEN": {
+        "description": "An Attend mobile token. In BetterAttend: Settings → Developer → Copy a new mobile token. The worker rotates it automatically."
+      },
+      "SLACK_WEBHOOK_URL": {
+        "description": "Slack incoming webhook URL to post sign-ups to (https://api.slack.com/messaging/webhooks)."
+      },
+      "ADMIN_KEY": {
+        "description": "Optional. Any long random string; enables the /status, /poll, /test and /reset endpoints."
+      },
+      "ALERT_WEBHOOK_URL": {
+        "description": "Optional. A separate Slack webhook for 'token expired' alerts. Defaults to SLACK_WEBHOOK_URL."
+      },
+      "ATTEND_EVENT": {
+        "description": "Event slug or ID, as in attend.hackclub.com/admin/<slug>. Comma-separate several."
+      },
+      "MESSAGE_TEMPLATE": {
+        "description": "Message per sign-up. Placeholders: {name} {first_name} {last_name} {mention} {email} {status} {count} {event} {event_url}."
+      },
+      "SUMMARY_TEMPLATE": {
+        "description": "Message used when more people signed up at once than MAX_MESSAGES_PER_POLL. Placeholders: {new_count} {count} {event} {event_url}."
+      }
+    }
   }
 }

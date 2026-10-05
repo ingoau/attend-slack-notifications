@@ -1,0 +1,6 @@
+# Secrets. For local dev copy this file to .dev.vars; in production use `npx wrangler secret put <NAME>`.
+ATTEND_TOKEN=
+SLACK_WEBHOOK_URL=
+# Optional
+ADMIN_KEY=
+ALERT_WEBHOOK_URL=
