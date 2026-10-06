@@ -3,7 +3,8 @@
 A Cloudflare Worker that watches a [Hack Club Attend](https://github.com/hackclub/attend) event and
 posts to Slack whenever someone new signs up, with the running total:
 
-> 🎉 **Ada Lovelace** just signed up for **Scrapyard Sydney**! That's **42** sign-ups so far.
+> new signup :yay:<br>
+> total signups: 42
 
 - Polls Attend every 5 minutes using a **mobile token**, and **rotates the token automatically**
   before it expires, so it keeps working indefinitely.
@@ -74,7 +75,7 @@ redeploy needed.
 | `ATTEND_TOKEN` | **required** | Attend mobile token. Only used to start (see [Token rotation](#token-rotation)). |
 | `SLACK_WEBHOOK_URL` | **required** | Where sign-ups are posted. |
 | `ATTEND_EVENT` | **required** | Event slug or ID. Comma-separate to watch several events. |
-| `MESSAGE_TEMPLATE` | `:tada: *{name}* just signed up for *{event}*! That's *{count}* sign-ups so far.` | One message per new sign-up. |
+| `MESSAGE_TEMPLATE` | `new signup :yay:` / `total signups: {count}` (two lines) | One message per new sign-up. |
 | `SUMMARY_TEMPLATE` | `:tada: *{new_count}* more people signed up for *{event}*! That's *{count}* sign-ups so far.` | Used when more people signed up at once than `MAX_MESSAGES_PER_POLL`. |
 | `SLACK_PAYLOAD_TEMPLATE` | – | A whole Slack message as JSON (e.g. Block Kit). See below. |
 | `MAX_MESSAGES_PER_POLL` | `5` | Most messages sent per event per poll. Past this, the last message summarizes the rest. |

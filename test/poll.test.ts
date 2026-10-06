@@ -24,7 +24,7 @@ describe("polling", () => {
     const second = await run();
     expect(second.events[0]).toMatchObject({ ok: true, count: 3, newSignups: 1, messagesSent: 1 });
     expect(world.slackTexts).toEqual([
-      ":tada: *Linus Torvalds* just signed up for *Scrapyard Sydney*! That's *3* sign-ups so far.",
+      "new signup :yay:\ntotal signups: 3",
     ]);
 
     await run();
@@ -35,7 +35,7 @@ describe("polling", () => {
     const { world, run } = setup({ ANNOUNCE_EXISTING: "true" });
     world.roster = [person("Ada", "Lovelace"), person("Grace", "Hopper")];
     await run();
-    expect(world.slackTexts.map((t) => t.match(/\*(\d+)\* sign-ups/)?.[1])).toEqual(["1", "2"]);
+    expect(world.slackTexts.map((t) => t.match(/total signups: (\d+)/)?.[1])).toEqual(["1", "2"]);
   });
 
   it("counts only the configured statuses", async () => {
@@ -50,7 +50,7 @@ describe("polling", () => {
     world.roster[1]!.status = "complete";
     await run();
     expect(world.slackTexts).toEqual([
-      ":tada: *Grace Hopper* just signed up for *Scrapyard Sydney*! That's *2* sign-ups so far.",
+      "new signup :yay:\ntotal signups: 2",
     ]);
   });
 
@@ -60,8 +60,8 @@ describe("polling", () => {
     world.roster = ["A", "B", "C", "D", "E", "F"].map((n) => person(n, "Test"));
     await run();
     expect(world.slackTexts).toEqual([
-      ":tada: *A Test* just signed up for *Scrapyard Sydney*! That's *1* sign-ups so far.",
-      ":tada: *B Test* just signed up for *Scrapyard Sydney*! That's *2* sign-ups so far.",
+      "new signup :yay:\ntotal signups: 1",
+      "new signup :yay:\ntotal signups: 2",
       ":tada: *4* more people signed up for *Scrapyard Sydney*! That's *6* sign-ups so far.",
     ]);
   });
@@ -77,7 +77,7 @@ describe("polling", () => {
     world.slackStatus = 200;
     await run();
     expect(world.slackTexts).toHaveLength(1);
-    expect(world.slackTexts[0]).toContain("Ada Lovelace");
+    expect(world.slackTexts).toEqual(["new signup :yay:\ntotal signups: 1"]);
   });
 
   it("doesn't announce the same person twice when their email changes case", async () => {
@@ -90,7 +90,7 @@ describe("polling", () => {
   });
 
   it("escapes Slack control sequences in names", async () => {
-    const { world, run } = setup();
+    const { world, run } = setup({ MESSAGE_TEMPLATE: "*{name}*" });
     await run();
     world.roster = [person("<!channel>", "& co")];
     await run();
