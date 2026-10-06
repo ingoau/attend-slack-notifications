@@ -76,7 +76,7 @@ redeploy needed.
 | `SLACK_WEBHOOK_URL` | **required** | Where sign-ups are posted. |
 | `ATTEND_EVENT` | **required** | Event slug or ID. Comma-separate to watch several events. |
 | `MESSAGE_TEMPLATE` | `new signup :yay:` / `total signups: {count}` (two lines) | One message per new sign-up. |
-| `SUMMARY_TEMPLATE` | `:tada: *{new_count}* more people signed up for *{event}*! That's *{count}* sign-ups so far.` | Used when more people signed up at once than `MAX_MESSAGES_PER_POLL`. |
+| `SUMMARY_TEMPLATE` | `new signups :yay: x{new_count}` / `total signups: {count}` (two lines) | Used when more people signed up at once than `MAX_MESSAGES_PER_POLL`. |
 | `SLACK_PAYLOAD_TEMPLATE` | – | A whole Slack message as JSON (e.g. Block Kit). See below. |
 | `MAX_MESSAGES_PER_POLL` | `5` | Most messages sent per event per poll. Past this, the last message summarizes the rest. |
 | `SIGNUP_STATUSES` | everyone on the roster | Comma-separated statuses that count as signed up, e.g. `complete` to only announce people who finished registering. Statuses: `invited`, `in_progress`, `awaiting_guardian`, `complete`. |

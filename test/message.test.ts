@@ -52,7 +52,7 @@ describe("templates", () => {
   it("renders the summary message", () => {
     const cfg = config();
     expect(buildPayload(cfg, cfg.summaryTemplate, summaryVars(4, event, 10, "x"))).toEqual({
-      text: ":tada: *4* more people signed up for *Scrapyard &lt;Sydney&gt;*! That's *10* sign-ups so far.",
+      text: "new signups :yay: x4\ntotal signups: 10",
     });
   });
 });
