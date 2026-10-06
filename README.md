@@ -57,9 +57,9 @@ worker's **Settings → Variables and Secrets**. Cloudflare redeploys on every p
 added in the dashboard survive redeploys (`keep_vars` in `wrangler.jsonc`).
 
 **One click:** the **Deploy to Cloudflare** button above copies this repo into your GitHub account,
-asks for each setting, and deploys. It also asks for `MESSAGE_TEMPLATE`, `SUMMARY_TEMPLATE` and
-`SLACK_PAYLOAD_TEMPLATE`: leave them blank for the default messages, or write your own using the
-[placeholders](#placeholders).
+asks for each setting, and deploys. The form won't accept a blank field, so the optional ones come
+pre-filled with `default` or `none`, which mean "not set". Keep those, or write your own message
+using the [placeholders](#placeholders).
 
 On its first run the worker quietly records everyone already signed up, so you won't get a flood of
 messages for existing sign-ups. Every person who appears after that gets announced.
@@ -69,7 +69,7 @@ messages for existing sign-ups. Every person who appears after that gets announc
 Set each of these with `npx wrangler secret put <NAME>`, or in the Cloudflare dashboard under the
 worker's **Settings → Variables and Secrets** (as a secret or a plain-text variable; the worker reads
 both the same way). Use a secret for anything sensitive. Changes apply on the next poll, with no
-redeploy needed.
+redeploy needed. For any optional setting, `default` or `none` means the same as leaving it unset.
 
 | Name | Default | What it does |
 | --- | --- | --- |

@@ -3,10 +3,9 @@
 ATTEND_TOKEN=
 SLACK_WEBHOOK_URL=
 ATTEND_EVENT=
-# Optional
-ADMIN_KEY=
-ALERT_WEBHOOK_URL=
-# Optional message templates. Leave blank for the defaults (see README.md for every placeholder).
-MESSAGE_TEMPLATE=
-SUMMARY_TEMPLATE=
-SLACK_PAYLOAD_TEMPLATE=
+# Optional. The Deploy to Cloudflare form won't take a blank value, so `none` / `default` mean unset.
+ADMIN_KEY=none
+ALERT_WEBHOOK_URL=default
+MESSAGE_TEMPLATE=default
+SUMMARY_TEMPLATE=default
+SLACK_PAYLOAD_TEMPLATE=none
