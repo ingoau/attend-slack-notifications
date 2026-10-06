@@ -62,7 +62,7 @@ describe("polling", () => {
     expect(world.slackTexts).toEqual([
       "new signup :yay:\ntotal signups: 1",
       "new signup :yay:\ntotal signups: 2",
-      ":tada: *4* more people signed up for *Scrapyard Sydney*! That's *6* sign-ups so far.",
+      "new signups :yay: x4\ntotal signups: 6",
     ]);
   });
 
