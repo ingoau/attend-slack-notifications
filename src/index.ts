@@ -1,4 +1,4 @@
-import { ConfigError, type Env } from "./config";
+import { ConfigError, optional, type Env } from "./config";
 
 export { Poller } from "./poller";
 
@@ -18,11 +18,14 @@ function safeEqual(a: string, b: string): boolean {
   return diff === 0;
 }
 
+const adminKey = (env: Env) => optional(env.ADMIN_KEY);
+
 function authorized(request: Request, env: Env): boolean {
-  if (!env.ADMIN_KEY) return false;
+  const key = adminKey(env);
+  if (!key) return false;
   const header = request.headers.get("Authorization") ?? "";
   const given = header.startsWith("Bearer ") ? header.slice(7) : (new URL(request.url).searchParams.get("key") ?? "");
-  return safeEqual(given, env.ADMIN_KEY);
+  return safeEqual(given, key);
 }
 
 export default {
@@ -50,7 +53,7 @@ export default {
     if (pathname === "/") {
       return new Response("attend-slack-notifications is running. See https://github.com/ingoau/attend-slack-notifications\n");
     }
-    if (!authorized(request, env)) return json({ error: env.ADMIN_KEY ? "Unauthorized" : "Not found" }, env.ADMIN_KEY ? 401 : 404);
+    if (!authorized(request, env)) return json({ error: adminKey(env) ? "Unauthorized" : "Not found" }, adminKey(env) ? 401 : 404);
 
     try {
       const stub = poller(env);

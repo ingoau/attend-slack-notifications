@@ -42,6 +42,15 @@ export const DEFAULT_SUMMARY_TEMPLATE =
 
 export class ConfigError extends Error {}
 
+/**
+ * An optional setting's value, or undefined when it's unset. The Deploy to Cloudflare form won't
+ * accept a blank secret, so `default` and `none` also mean "not set".
+ */
+export const optional = (value: string | undefined): string | undefined => {
+  const v = value?.trim();
+  return v && !/^(default|none)$/i.test(v) ? v : undefined;
+};
+
 const list = (value: string | undefined): string[] =>
   (value ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 
@@ -58,9 +67,10 @@ export function loadConfig(env: Env): Config {
   if (missing.length) throw new ConfigError(`Missing required setting(s): ${missing.join(", ")}`);
 
   let payloadTemplate: unknown | null = null;
-  if (env.SLACK_PAYLOAD_TEMPLATE?.trim()) {
+  const payloadJson = optional(env.SLACK_PAYLOAD_TEMPLATE);
+  if (payloadJson) {
     try {
-      payloadTemplate = JSON.parse(env.SLACK_PAYLOAD_TEMPLATE);
+      payloadTemplate = JSON.parse(payloadJson);
     } catch (e) {
       throw new ConfigError(`SLACK_PAYLOAD_TEMPLATE is not valid JSON: ${(e as Error).message}`);
     }
@@ -69,14 +79,14 @@ export function loadConfig(env: Env): Config {
   const max = Number.parseInt(env.MAX_MESSAGES_PER_POLL ?? "", 10);
 
   return {
-    attendBaseUrl: (env.ATTEND_BASE_URL?.trim() || "https://attend.hackclub.com").replace(/\/+$/, ""),
+    attendBaseUrl: (optional(env.ATTEND_BASE_URL) ?? "https://attend.hackclub.com").replace(/\/+$/, ""),
     seedToken,
     events,
-    statuses: new Set(list(env.SIGNUP_STATUSES).map((s) => s.toLowerCase())),
+    statuses: new Set(list(optional(env.SIGNUP_STATUSES)).map((s) => s.toLowerCase())),
     slackWebhookUrl,
-    alertWebhookUrl: env.ALERT_WEBHOOK_URL?.trim() || null,
-    messageTemplate: env.MESSAGE_TEMPLATE?.trim() || DEFAULT_MESSAGE_TEMPLATE,
-    summaryTemplate: env.SUMMARY_TEMPLATE?.trim() || DEFAULT_SUMMARY_TEMPLATE,
+    alertWebhookUrl: optional(env.ALERT_WEBHOOK_URL) ?? null,
+    messageTemplate: optional(env.MESSAGE_TEMPLATE) ?? DEFAULT_MESSAGE_TEMPLATE,
+    summaryTemplate: optional(env.SUMMARY_TEMPLATE) ?? DEFAULT_SUMMARY_TEMPLATE,
     payloadTemplate,
     maxMessagesPerPoll: Number.isFinite(max) && max > 0 ? max : 5,
     announceExisting: truthy(env.ANNOUNCE_EXISTING),

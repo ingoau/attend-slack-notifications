@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ConfigError } from "../src/config";
+import { ConfigError, DEFAULT_MESSAGE_TEMPLATE, DEFAULT_SUMMARY_TEMPLATE } from "../src/config";
 import { buildPayload, render, signupVars, summaryVars } from "../src/message";
 import { config, person } from "./helpers";
 
@@ -74,5 +74,18 @@ describe("config", () => {
     expect([...cfg.statuses]).toEqual(["complete", "in_progress"]);
     expect(cfg.attendBaseUrl).toBe("https://attend.hackclub.com");
     expect(cfg.maxMessagesPerPoll).toBe(5);
+  });
+
+  it("treats `default` and `none` as unset, since the deploy form can't leave a field blank", () => {
+    const cfg = config({
+      MESSAGE_TEMPLATE: "default",
+      SUMMARY_TEMPLATE: " Default ",
+      SLACK_PAYLOAD_TEMPLATE: "none",
+      ALERT_WEBHOOK_URL: "default",
+    });
+    expect(cfg.messageTemplate).toBe(DEFAULT_MESSAGE_TEMPLATE);
+    expect(cfg.summaryTemplate).toBe(DEFAULT_SUMMARY_TEMPLATE);
+    expect(cfg.payloadTemplate).toBeNull();
+    expect(cfg.alertWebhookUrl).toBeNull();
   });
 });

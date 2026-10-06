@@ -26,22 +26,22 @@
         "description": "Slack incoming webhook URL to post sign-ups to (https://api.slack.com/messaging/webhooks)."
       },
       "ADMIN_KEY": {
-        "description": "Optional. Any long random string; enables the /status, /poll, /test and /reset endpoints."
+        "description": "Type `none` to skip, or any long random string to enable the /status, /poll, /test and /reset endpoints."
       },
       "ALERT_WEBHOOK_URL": {
-        "description": "Optional. A separate Slack webhook for 'token expired' alerts. Defaults to SLACK_WEBHOOK_URL."
+        "description": "Type `default` to use SLACK_WEBHOOK_URL, or a separate Slack webhook for alerts like an expired token."
       },
       "ATTEND_EVENT": {
-        "description": "Event slug or ID, as in attend.hackclub.com/admin/<slug>. Comma-separate several."
+        "description": "Event slug or ID: the last part of your event's attend.hackclub.com/admin/ URL. Comma-separate several."
       },
       "MESSAGE_TEMPLATE": {
-        "description": "Optional. The Slack message posted for each new sign-up. Leave blank for the default, `new signup :yay:` with `total signups: {count}` on a second line. Placeholders: `{name}`, `{first_name}`, `{last_name}`, `{mention}` (pings them if Attend knows their Slack ID), `{email}`, `{status}`, `{count}` (total sign-ups), `{event}`, `{event_url}`. Slack formatting works, e.g. `*bold*`. [All placeholders](https://github.com/ingoau/attend-slack-notifications#placeholders)"
+        "description": "Type `default`, or your own message using `{name}`, `{mention}`, `{count}` and [more](https://github.com/ingoau/attend-slack-notifications#placeholders)."
       },
       "SUMMARY_TEMPLATE": {
-        "description": "Optional. Posted instead of one message per person when more than 5 people sign up between checks. Leave blank for the default, `new signups :yay: x{new_count}` with `total signups: {count}` on a second line. Placeholders: `{new_count}` (how many the summary covers), `{count}` (total sign-ups), `{event}`, `{event_url}`."
+        "description": "Sent when 6+ people sign up at once. Type `default`, or your own using `{new_count}` and `{count}`."
       },
       "SLACK_PAYLOAD_TEMPLATE": {
-        "description": "Optional, advanced. A whole Slack message as JSON, e.g. [Block Kit](https://app.slack.com/block-kit-builder), for buttons or richer layouts. Every string in it can use the same placeholders as `MESSAGE_TEMPLATE`, and `{text}` is the rendered message template. Leave blank to post plain text. [Example](https://github.com/ingoau/attend-slack-notifications#full-payloads-block-kit)"
+        "description": "Advanced. Type `none`, or a whole Slack message as JSON. [Example](https://github.com/ingoau/attend-slack-notifications#full-payloads-block-kit)"
       }
     }
   }
