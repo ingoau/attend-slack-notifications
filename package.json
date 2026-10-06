@@ -41,7 +41,7 @@
         "description": "Optional. Posted instead of one message per person when more than 5 people sign up between checks. Leave blank for the default, `new signups :yay: x{new_count}` with `total signups: {count}` on a second line. Placeholders: `{new_count}` (how many the summary covers), `{count}` (total sign-ups), `{event}`, `{event_url}`."
       },
       "SLACK_PAYLOAD_TEMPLATE": {
-        "description": "Optional, advanced. A whole Slack message as JSON, e.g. [Block Kit](https://app.slack.com/block-kit-builder), for buttons or richer layouts. Every string in it can use the placeholders above, and `{text}` is the rendered message template. Leave blank to post plain text. [Example](https://github.com/ingoau/attend-slack-notifications#full-payloads-block-kit)"
+        "description": "Optional, advanced. A whole Slack message as JSON, e.g. [Block Kit](https://app.slack.com/block-kit-builder), for buttons or richer layouts. Every string in it can use the same placeholders as `MESSAGE_TEMPLATE`, and `{text}` is the rendered message template. Leave blank to post plain text. [Example](https://github.com/ingoau/attend-slack-notifications#full-payloads-block-kit)"
       }
     }
   }
