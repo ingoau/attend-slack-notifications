@@ -61,6 +61,14 @@ asks for each setting, and deploys. The form won't accept a blank field, so the 
 pre-filled with `default` or `none`, which mean "not set". Keep those, or write your own message
 using the [placeholders](#placeholders).
 
+Every field in that form is a secret, so even the message templates are hidden as you type, like
+passwords. That's a Cloudflare limitation, not a sign they're sensitive: the form can only show a
+plain-text field for a variable written into `wrangler.jsonc`, and those are reset to the repo's
+value on every redeploy, which would wipe a message you later change in the dashboard. Secrets
+survive redeploys. Once deployed, you can swap a template for a plain-text variable under the
+worker's **Settings → Variables and Secrets** (delete the secret, then add a text variable with the
+same name). To preview a message, use [`POST /test`](#admin-endpoints).
+
 On its first run the worker quietly records everyone already signed up, so you won't get a flood of
 messages for existing sign-ups. Every person who appears after that gets announced.
 
