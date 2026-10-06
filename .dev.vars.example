@@ -6,3 +6,6 @@ ATTEND_EVENT=
 # Optional
 ADMIN_KEY=
 ALERT_WEBHOOK_URL=
+# Optional message templates. Leave blank for the defaults (see README.md for every placeholder).
+MESSAGE_TEMPLATE=
+SUMMARY_TEMPLATE=
