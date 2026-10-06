@@ -5,7 +5,7 @@ posts to Slack whenever someone new signs up, with the running total:
 
 > 🎉 **Ada Lovelace** just signed up for **Scrapyard Sydney**! That's **42** sign-ups so far.
 
-- Polls Attend every minute using a **mobile token**, and **rotates the token automatically**
+- Polls Attend every 5 minutes using a **mobile token**, and **rotates the token automatically**
   before it expires, so it keeps working indefinitely.
 - Messages are fully configurable with environment variables, up to complete Block Kit payloads.
 - Free-plan friendly: one cron trigger and one SQLite-backed Durable Object. Nothing to provision.
@@ -83,7 +83,7 @@ redeploy needed.
 | `ADMIN_KEY` | – | Enables the admin endpoints. |
 | `ALERT_WEBHOOK_URL` | `SLACK_WEBHOOK_URL` | Where problems (expired token, inaccessible event) are reported. |
 
-The poll interval is the cron in `wrangler.jsonc` → `triggers.crons` (every minute by default).
+The poll interval is the cron in `wrangler.jsonc` → `triggers.crons` (every 5 minutes by default).
 
 ### What counts as a sign-up
 

@@ -5,8 +5,8 @@
   "compatibility_date": "2026-09-01",
   "observability": { "enabled": true },
 
-  // How often to check Attend for new sign-ups. Every minute by default.
-  "triggers": { "crons": ["* * * * *"] },
+  // How often to check Attend for new sign-ups. Every 5 minutes by default.
+  "triggers": { "crons": ["*/5 * * * *"] },
 
   // Holds the rotating Attend token and the list of people already announced.
   // SQLite-backed, so it works on the Workers free plan and needs no setup.
