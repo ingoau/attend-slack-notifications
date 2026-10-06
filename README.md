@@ -56,7 +56,8 @@ worker's **Settings → Variables and Secrets**. Cloudflare redeploys on every p
 added in the dashboard survive redeploys (`keep_vars` in `wrangler.jsonc`).
 
 **One click:** the **Deploy to Cloudflare** button above copies this repo into your GitHub account,
-asks for each setting, and deploys.
+asks for each setting, and deploys. It also asks for `MESSAGE_TEMPLATE` and `SUMMARY_TEMPLATE`:
+leave them blank for the default messages, or write your own using the [placeholders](#placeholders).
 
 On its first run the worker quietly records everyone already signed up, so you won't get a flood of
 messages for existing sign-ups. Every person who appears after that gets announced.

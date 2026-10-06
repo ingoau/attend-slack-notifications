@@ -33,6 +33,12 @@
       },
       "ATTEND_EVENT": {
         "description": "Event slug or ID, as in attend.hackclub.com/admin/<slug>. Comma-separate several."
+      },
+      "MESSAGE_TEMPLATE": {
+        "description": "Optional. The message posted for each sign-up; blank uses the default \":tada: *{name}* just signed up for *{event}*! That's *{count}* sign-ups so far.\" Placeholders: {name} {first_name} {last_name} {mention} {email} {status} {count} {event} {event_url}."
+      },
+      "SUMMARY_TEMPLATE": {
+        "description": "Optional. Posted instead when more people signed up at once than MAX_MESSAGES_PER_POLL (default 5); blank uses the default \":tada: *{new_count}* more people signed up for *{event}*! That's *{count}* sign-ups so far.\" Placeholders: {new_count} {count} {event} {event_url}."
       }
     }
   }
