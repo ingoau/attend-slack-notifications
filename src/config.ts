@@ -36,7 +36,7 @@ export interface Config {
 }
 
 export const DEFAULT_MESSAGE_TEMPLATE =
-  ":tada: *{name}* just signed up for *{event}*! That's *{count}* sign-ups so far.";
+  "new signup :yay:\ntotal signups: {count}";
 export const DEFAULT_SUMMARY_TEMPLATE =
   ":tada: *{new_count}* more people signed up for *{event}*! That's *{count}* sign-ups so far.";
 
