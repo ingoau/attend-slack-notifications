@@ -20,7 +20,7 @@
   "cloudflare": {
     "bindings": {
       "ATTEND_TOKEN": {
-        "description": "An Attend mobile token. In BetterAttend: Settings → Developer → Copy a new mobile token. The worker rotates it automatically."
+        "description": "An Attend mobile token. Run `npx @ingowolf/attend-token`, or in BetterAttend: Settings → Developer → Copy a new mobile token. The worker rotates it automatically."
       },
       "SLACK_WEBHOOK_URL": {
         "description": "Slack incoming webhook URL to post sign-ups to (https://api.slack.com/messaging/webhooks)."

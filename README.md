@@ -18,11 +18,19 @@ posts to Slack whenever someone new signs up, with the running total:
 
 ### 1. Get the two secrets
 
-**An Attend mobile token.** The easiest way is [BetterAttend](https://github.com/ingoau/better-attend):
-**Settings → Developer → Copy a new mobile token**. That runs a separate Hack Club sign-in and copies
-a brand-new token, independent of the app's own session (give it a name like "Slack notifications"
-so you can recognise it in Attend's device list). The account needs to be able to view participants
-for the event (event admin, ops, limited or safeguarding lead, a series member, or a global admin).
+**An Attend mobile token.** From a computer, run:
+
+```sh
+npx @ingowolf/attend-token
+```
+
+It signs you in with Hack Club in your browser and creates a brand-new token
+([attend-token](https://github.com/ingoau/attend-token)).
+Or, from your phone, use [BetterAttend](https://github.com/ingoau/better-attend):
+**Settings → Developer → Copy a new mobile token**. Either way the token is a separate session, so
+give it a name like "Slack notifications" so you can recognise it in Attend's device list. The
+account needs to be able to view participants for the event (event admin, ops, limited or
+safeguarding lead, a series member, or a global admin).
 
 **A Slack incoming webhook URL.** Create a Slack app (or use an existing one), enable
 [Incoming Webhooks](https://api.slack.com/messaging/webhooks), and add a webhook for the channel you
